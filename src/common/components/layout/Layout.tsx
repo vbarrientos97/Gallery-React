@@ -1,7 +1,6 @@
-import { ReactNode } from 'react';
+import { useState, ReactNode } from 'react';
 import { Stack, IStackStyles, IStackTokens, IStackItemStyles } from '@fluentui/react/lib/Stack';
 import { DefaultPalette, DefaultEffects } from '@fluentui/react/lib/Styling';
-import AppBar from './AppBar';
 import TopBar from './TopBar';
 
 // Styles definition
@@ -48,9 +47,6 @@ export default function Layout({ children }: Props) {
         <Stack styles={parantStackStyles} tokens={parentTokens}>
             <TopBar />
             <Stack horizontal grow>
-                <Stack.Item styles={navStyles}>
-                    <AppBar />
-                </Stack.Item>
                 <Stack.Item grow styles={contentStyles}>
                     {children}
                 </Stack.Item>

@@ -60,10 +60,12 @@ const iconButtonStyles: Partial<IButtonStyles> = {
 
 export default function PhotosList() {
     const id = useParams<RouteParams>();
-    const albumList = useGetAllPhotosQuery();
+    const photosList = useGetAllPhotosQuery();
+    const listData = photosList.data;
     const [isModalOpen, { setTrue: showModal, setFalse: hideModal }] = useBoolean(false);
     const [modalTitle, setModalTitle] = useState('');
     const [modalImageUrl, setModalImageUrl] = useState('');
+    const [loadingMore, setLoadingMore] = useState(16);
 
     const titleId = useId('title');
 
@@ -75,21 +77,36 @@ export default function PhotosList() {
 
     return (
         <>
-            {console.log('aquiiii', id)}
-            <div className="flex-photo-container gallery-container">
-                {albumList.data
+            {console.log(listData, 'list dataaaa')}
+            <div className="gallery-container">
+                {listData
                     ?.filter(item => Number(id.id) === item.albumId)
-                    .map(item => (
-                        <div className="photo-container" key={item.id}>
-                            <img src={item.thumbnailUrl} alt={item.title} />
-                            <h3>{item.title}</h3>
-                            <PrimaryButton
-                                onClick={() => modalData(item.title, item.url)}
-                                text="See more"
-                            />
-                        </div>
-                    ))}
+                    .map((item, index) => {
+                        if (index < loadingMore) {
+                            return (
+                                <div className="photo-container" key={item.id}>
+                                    <img src={item.thumbnailUrl} alt={item.title} />
+                                    <h3>{item.title}</h3>
+                                    <PrimaryButton
+                                        onClick={() => modalData(item.title, item.url)}
+                                        text="See more"
+                                    />
+                                </div>
+                            );
+                        }
+                        return console.log('que retorno aquí x2');
+                    })}
             </div>
+            {listData &&
+                loadingMore < listData?.filter(item => Number(id.id) === item.albumId).length && (
+                    <button
+                        className="loading-btn"
+                        type="button"
+                        onClick={() => setLoadingMore(loadingMore + 16)}
+                    >
+                        Loading More
+                    </button>
+                )}
             <Modal
                 titleAriaId={titleId}
                 isOpen={isModalOpen}
@@ -107,7 +124,6 @@ export default function PhotosList() {
                     />
                 </div>
                 <div className={contentStyles.body}>
-                    <p>Dónde está la mamá de Luismi?</p>
                     <img src={modalImageUrl} alt={modalTitle} />
                 </div>
             </Modal>

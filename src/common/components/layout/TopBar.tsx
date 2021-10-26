@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import { CommandBar } from '@fluentui/react/lib/CommandBar';
 import { ThemeProvider, PartialTheme } from '@fluentui/react/lib/Theme';
+import Cookies from 'universal-cookie';
 import { IButtonStyles } from '@fluentui/react/lib/Button';
 import { useHistory } from 'react-router-dom';
 
@@ -36,6 +38,8 @@ const barTheme: PartialTheme = {
 
 export default function TopBar() {
     const history = useHistory();
+    const cookies = new Cookies();
+
     return (
         <ThemeProvider theme={barTheme}>
             <CommandBar
@@ -50,21 +54,17 @@ export default function TopBar() {
                 farItems={[
                     {
                         key: 'user',
-                        text: 'Verónica Barrientos',
-                        // iconProps: { iconName: 'more' },
+                        text: cookies.get('name') as string,
                         subMenuProps: {
                             items: [
-                                {
-                                    key: 'profile',
-                                    text: 'Profile',
-                                    iconProps: { iconName: 'AccountManagement' },
-                                    onClick: () => history.push('/profile'),
-                                },
                                 {
                                     key: 'signout',
                                     text: 'Sign Out',
                                     iconProps: { iconName: 'SignOut' },
-                                    onClick: () => history.push('/profile'),
+                                    onClick: () => {
+                                        history.push('/login');
+                                        cookies.remove('name', { path: '/' });
+                                    },
                                 },
                             ],
                         },

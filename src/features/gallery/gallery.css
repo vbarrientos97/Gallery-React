@@ -56,6 +56,7 @@
     left: 45%;
     bottom: 0;
     margin-top: 15px;
+    margin-bottom: 60px;
 }
 
 .photo-container {
@@ -72,6 +73,12 @@
     flex-direction: column;
     font-size: 0.8rem;
     border-radius: 4px;
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
 }
 
 .photo-container img {
@@ -95,6 +102,32 @@
     animation-duration: 1s;
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
+}
+
+.login-container {
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: auto auto;
+    padding: 46px;
+    border: solid 1px rgb(160, 160, 160);
+    border-radius: 6px;
+    background-color: #fff;
+    box-shadow: -8px 7px 8px -5px rgba(112,112,112,0.75);
+-webkit-box-shadow: -8px 7px 8px -5px rgba(112,112,112,0.75);
+-moz-box-shadow: -8px 7px 8px -5px rgba(112,112,112,0.75);
+    box-shadow: -8px 7px 8px -5px rgba(112,112,112,0.75);
+-webkit-box-shadow: -8px 7px 8px -5px rgba(112,112,112,0.75);
+-moz-box-shadow: -8px 7px 8px -5px rgba(112,112,112,0.75);
+}
+
+.login-container .ms-TextField.is-required.ms-TextField--underlined, .login-container .flex.justify-end {
+    margin: 4px 0;
+}
+
+.login-container span.font-extrabold.css-79 {
+    margin-bottom: 8px;
 }
 
 @-webkit-keyframes scale-up-center {
