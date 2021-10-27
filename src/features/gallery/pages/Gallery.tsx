@@ -24,25 +24,23 @@ export default function Gallery() {
     const id = useParams<RouteParams>();
     const [firstTextFieldAlbum, setFirstTextFieldAlbum] = useState('');
 
-    const onChangeFirstTextFieldAlbum = useCallback(
-        (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            setFirstTextFieldAlbum(newValue || '');
-            console.log(newValue, listData);
-            if (newValue === '') {
-                setListDataSearch(albumList.data);
-            } else {
-                setListDataSearch(
-                    listData?.filter(item => item.title.includes(newValue as string)),
-                );
-            }
-        },
-        [],
-    );
+    const onChangeFirstTextFieldAlbum = (
+        event: FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+        newValue?: string,
+    ) => {
+        setFirstTextFieldAlbum(newValue || '');
+        console.log(newValue, albumList.data);
+        if (newValue === '') {
+            setListDataSearch(albumList.data);
+        } else {
+            setListDataSearch(listData?.filter(item => item.title.includes(newValue as string)));
+        }
+    };
 
-    // useEffect(() => {
-    //     console.log(listDataSearch, albumList.data);
-    //     setListDataSearch(listDataSearch);
-    // }, []);
+    useEffect(() => {
+        console.log(listDataSearch, albumList.data);
+        setListDataSearch(albumList.data);
+    }, [albumList.data]);
 
     return (
         <>

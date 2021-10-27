@@ -86,17 +86,18 @@ export default function PhotosList() {
         showModal();
     }
 
-    const onChangeFirstTextFieldPhoto = useCallback(
-        (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
-            setFirstTextFieldPhoto(newValue || '');
-            setListDataSearch(listData?.filter(item => item.title.includes(newValue as string)));
-        },
-        [],
-    );
+    const onChangeFirstTextFieldPhoto = (
+        event: FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+        newValue?: string,
+    ) => {
+        setFirstTextFieldPhoto(newValue || '');
+        setListDataSearch(listData?.filter(item => item.title.includes(newValue as string)));
+    };
 
-    // useEffect(() => {
-    //     setListDataSearch(listData);
-    // }, [listData, setListDataSearch]);
+    useEffect(() => {
+        // console.log(listDataSearch, albumList.data);
+        setListDataSearch(photosList.data);
+    }, [photosList.data]);
 
     return (
         <>
