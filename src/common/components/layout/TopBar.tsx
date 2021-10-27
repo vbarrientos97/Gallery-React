@@ -54,7 +54,9 @@ export default function TopBar() {
                 farItems={[
                     {
                         key: 'user',
-                        text: cookies.get('name') as string,
+                        text: cookies.get('name')
+                            ? `Bienvenido ${cookies.get('name') as string}`
+                            : 'Bienvenido',
                         subMenuProps: {
                             items: [
                                 {

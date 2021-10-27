@@ -1,15 +1,22 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { useState } from 'react';
+import { useState, useCallback, FormEvent, useEffect } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { useParams } from 'react-router';
 import { useId, useBoolean } from '@fluentui/react-hooks';
-import { getTheme, mergeStyleSets, FontWeights, Modal, IIconProps } from '@fluentui/react';
+import {
+    getTheme,
+    mergeStyleSets,
+    FontWeights,
+    Modal,
+    IIconProps,
+    TextField,
+    ITextFieldStyles,
+} from '@fluentui/react';
 import { IconButton, IButtonStyles, PrimaryButton } from '@fluentui/react/lib/Button';
 import { useGetAllPhotosQuery } from '../services/galleryApi';
 import '../gallery.css';
 
 const cancelIcon: IIconProps = { iconName: 'Cancel' };
-
 interface RouteParams {
     id: string;
 }
@@ -58,14 +65,18 @@ const iconButtonStyles: Partial<IButtonStyles> = {
     },
 };
 
+const textFieldStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 300 } };
+
 export default function PhotosList() {
     const id = useParams<RouteParams>();
     const photosList = useGetAllPhotosQuery();
     const listData = photosList.data;
+    const [listDataSearch, setListDataSearch] = useState(photosList.data);
     const [isModalOpen, { setTrue: showModal, setFalse: hideModal }] = useBoolean(false);
     const [modalTitle, setModalTitle] = useState('');
     const [modalImageUrl, setModalImageUrl] = useState('');
     const [loadingMore, setLoadingMore] = useState(16);
+    const [firstTextFieldPhoto, setFirstTextFieldPhoto] = useState('');
 
     const titleId = useId('title');
 
@@ -75,11 +86,29 @@ export default function PhotosList() {
         showModal();
     }
 
+    const onChangeFirstTextFieldPhoto = useCallback(
+        (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setFirstTextFieldPhoto(newValue || '');
+            setListDataSearch(listData?.filter(item => item.title.includes(newValue as string)));
+        },
+        [],
+    );
+
+    // useEffect(() => {
+    //     setListDataSearch(listData);
+    // }, [listData, setListDataSearch]);
+
     return (
         <>
-            {console.log(listData, 'list dataaaa')}
+            <TextField
+                label="Search Photo"
+                value={firstTextFieldPhoto}
+                className="search-photo"
+                onChange={onChangeFirstTextFieldPhoto}
+                styles={textFieldStyles}
+            />
             <div className="gallery-container">
-                {listData
+                {listDataSearch
                     ?.filter(item => Number(id.id) === item.albumId)
                     .map((item, index) => {
                         if (index < loadingMore) {
@@ -94,11 +123,12 @@ export default function PhotosList() {
                                 </div>
                             );
                         }
-                        return console.log('que retorno aquí x2');
+                        return console.log('');
                     })}
             </div>
-            {listData &&
-                loadingMore < listData?.filter(item => Number(id.id) === item.albumId).length && (
+            {listDataSearch &&
+                loadingMore <
+                    listDataSearch?.filter(item => Number(id.id) === item.albumId).length && (
                     <button
                         className="loading-btn"
                         type="button"

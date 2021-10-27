@@ -20,7 +20,7 @@ export default function AppRouter() {
                         <Route path="/photoslist" component={PhotosList} />
                         <Route path="/signin" component={SignIn} />
                         <Route path="/login" component={Login} />
-                        <Redirect to="/gallery" />
+                        <Redirect to="/login" />
                     </Switch>
                 </Layout>
             ) : (

@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useCallback, FormEvent, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { TextField, ITextFieldStyles } from '@fluentui/react/lib/TextField';
 import { useGetAllAlbumsQuery } from '../services/galleryApi';
 import Album from '../components/Album';
 import '../gallery.css';
@@ -13,16 +14,47 @@ export function GlobalUser() {
     return id;
 }
 
+const textFieldStyles: Partial<ITextFieldStyles> = { fieldGroup: { width: 300 } };
+
 export default function Gallery() {
     const albumList = useGetAllAlbumsQuery();
     const listData = albumList.data;
+    const [listDataSearch, setListDataSearch] = useState(albumList.data);
     const [loadingMore, setLoadingMore] = useState(10);
     const id = useParams<RouteParams>();
+    const [firstTextFieldAlbum, setFirstTextFieldAlbum] = useState('');
+
+    const onChangeFirstTextFieldAlbum = useCallback(
+        (event: FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string) => {
+            setFirstTextFieldAlbum(newValue || '');
+            console.log(newValue, listData);
+            if (newValue === '') {
+                setListDataSearch(albumList.data);
+            } else {
+                setListDataSearch(
+                    listData?.filter(item => item.title.includes(newValue as string)),
+                );
+            }
+        },
+        [],
+    );
+
+    // useEffect(() => {
+    //     console.log(listDataSearch, albumList.data);
+    //     setListDataSearch(listDataSearch);
+    // }, []);
 
     return (
         <>
+            <TextField
+                label="Search Album"
+                value={firstTextFieldAlbum}
+                className="text-field-search"
+                onChange={onChangeFirstTextFieldAlbum}
+                styles={textFieldStyles}
+            />
             <div className="gallery-container">
-                {listData
+                {listDataSearch
                     ?.filter(item => Number(id.id) === item.userId)
                     .map((item, index) => {
                         if (index < loadingMore) {
@@ -31,8 +63,9 @@ export default function Gallery() {
                         return console.log('');
                     })}
             </div>
-            {listData &&
-                loadingMore < listData?.filter(item => Number(id.id) === item.userId).length && (
+            {listDataSearch &&
+                loadingMore <
+                    listDataSearch?.filter(item => Number(id.id) === item.userId).length && (
                     <button
                         className="loading-btn"
                         type="button"
